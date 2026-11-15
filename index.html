@@ -1,110 +1,165 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Simple Blog</title>
-  <style>
-    /* 全体の読みやすさ・デザイン設定 */
-   /* 全体の読みやすさ・デザイン設定 */
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Simple Blog</title>
+    <style>
+        /* 今のデザイン（コルクボードや付箋風など）に合わせて微調整できます */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Kaku Gothic ProN", sans-serif;
-            line-height: 1.8;
+            font-family: sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
             color: #333;
-            
-            /* 背景の写真と色の設定 */
-            background-color: #f5f2eb;
-            background-image: url('images/CorkBoard02.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-
-            margin: 0;
-            padding: 0;
         }
-    header {
-      background-color: #fff;
-      border-bottom: 1px solid #eaeaea;
-      padding: 40px 20px;
-      text-align: center;
-    }
-    article {
-    max-width: 720px;
-    margin: 40px auto;
-    /* 付箋っぽい明るいイエロー（またはお好みの色）にする */
-    background-color: #fff8d6; 
-    padding: 30px;
-    /* 角を少しだけ丸くする */
-    border-radius: 4px;
-    /* 付箋が少し浮いているようなリアルな影をつける */
-    box-shadow: 2px 4px 10px rgba(0,0,0,0.15);
-    /* お好みで少しだけ傾けて「ラフに貼った感」を出す場合（外してもOK） */
-    /* transform: rotate(-1deg); */
-}
-    header p {
-      color: #777;
-      font-size: 0.9rem;
-      margin-top: 8px;
-    }
-    main {
-      max-width: 720px;
-      margin: 40px auto;
-      padding: 0 20px;
-    
-      margin-bottom: 32px;
-    }
-    .date {
-      font-size: 0.85rem;
-      color: #888;
-    }
-    article h2 {
-      margin-top: 4px;
-      margin-bottom: 16px;
-      font-size: 1.4rem;
-      border-bottom: 2px solid #f0f0f0;
-      padding-bottom: 8px;
-    }
-    footer {
-      text-align: center;
-      padding: 40px 20px;
-      color: #999;
-      font-size: 0.85rem;
-    }
-  </style>
+        h1 { margin-bottom: 5px; }
+        .post-form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .post-form input, .post-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .post-form button {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .post-form button:hover { background-color: #555; }
+        .article-card {
+            background: #fff;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+        }
+        .article-card .date { font-size: 0.85rem; color: #777; }
+        .article-card .author { font-size: 0.9rem; color: #555; font-weight: bold; margin-bottom: 5px; }
+    </style>
 </head>
 <body>
 
-  <header>
     <h1>NG Log</h1>
     <p>日常を残すブログ</p>
-  </header>
 
-  <main>
-    <article 
-      <div class="date">2026.11.15</div>
-      <h2>はじめてのブログ記事</h2>
-      <p>GitHub Pagesを使って、完全無料でオリジナルブログを公開しました！</p>
-      <p>HTMLとCSSを少しずつ編集しながら、自分だけのデザインに育てていく予定です。</p>
-    </article>
-    <article 
-                <div class="date">2026.11.15</div>
-                <h2 style="font-size: 1.4rem; margin: 4px 0 16px 0; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px;">VS Codeでブログを編集しました！</h2>
-                <p style="line-height: 1.7; color: #444;">
-                    今日からMacの [Visual Studio Code](https://code.visualstudio.com/) を使ってブログを編集できるように環境を整えました。手元でコードを書いてGitHubに反映させる流れが分かってきました！
-                </p>
-            </article>
-    <article
-                <div class="date">2026.11.15</div>
-                <h2 style="font-size: 1.4rem; margin: 4px 0 16px 0; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px;">ブログを編集しました！</h2>
-                <p style="line-height: 1.7; color: #444;">
-                    今までAIの言われるがままに作成してきましたが、ついに自分でも作成することに成功しました。やったね!ここから私の日常を記載していこうと思います。
-                </p>
-            </article>       
-  </main>
+    <!-- 投稿フォーム（お友達がここから送れます） -->
+    <div class="post-form">
+        <h3>お友達と一緒に投稿する</h3>
+        <form id="blog-form">
+            <label>お名前：<input type="text" id="name" required placeholder="例：お友達の名前"></label>
+            <label>タイトル：<input type="text" id="title" required placeholder="例：今日の出来事"></label>
+            <label>本文：<textarea id="content" rows="4" required placeholder="本文を入力..."></textarea></label>
+            <button type="submit">投稿する</button>
+        </form>
+    </div>
 
-  <footer>
-    &copy; 2026 My Simple Blog
-  </footer>
+    <!-- 記事一覧が表示される場所 -->
+    <div id="posts-container">
+        <!-- 過去の固定記事 -->
+        <div class="article-card">
+            <div class="date">2026.11.15</div>
+            <h2>ブログを編集しました！</h2>
+            <p>今までAIの言われるがままに作成してきましたが、ついに自分でも作成することに成功しました。やったね!ここから私の日常を記載していこうと思います。</p>
+        </div>
+    </div>
 
+    <footer>
+        <p style="text-align: center; font-size: 0.8rem; color: #aaa; margin-top: 40px;">© 2026 My Simple Blog</p>
+    </footer>
+
+    <!-- Supabase SDKの読み込み -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // あなたのSupabase接続情報
+        const SUPABASE_URL = 'https://sagrjbgmyghmswnavcip.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_PjC4sz4d9W6ELmITEKJ05g_0Er-EaCM';
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const form = document.getElementById('blog-form');
+        const container = document.getElementById('posts-container');
+
+        // Supabaseから記事を読み込んで表示する関数
+        async function fetchPosts() {
+            const { data, error } = await supabaseClient
+                .from('posts')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('データ取得エラー:', error);
+                return;
+            }
+
+            // データベースに投稿がある場合、画面の既存の記事の上に動的に追加する
+            // （過去の固定記事の下、または上にお好みで配置できます）
+            let dynamicHtml = '';
+            data.forEach(post => {
+                const dateStr = new Date(post.created_at).toLocaleDateString();
+                dynamicHtml += `
+                    <div class="article-card">
+                        <div class="date">${dateStr}</div>
+                        <div class="author">投稿者: ${escapeHtml(post.name)}</div>
+                        <h2>${escapeHtml(post.title)}</h2>
+                        <p>${escapeHtml(post.content).replace(/\n/g, '<br>')}</p>
+                    </div>
+                `;
+            });
+
+            // 既存の固定記事の前にSupabaseからの投稿を挿入する
+            const existingContent = `
+                <div class="article-card">
+                    <div class="date">2026.11.15</div>
+                    <h2>ブログを編集しました！</h2>
+                    <p>今までAIの言われるがままに作成してきましたが、ついに自分でも作成することに成功しました。やったね!ここから私の日常を記載していこうと思います。</p>
+                </div>
+            `;
+            
+            container.innerHTML = dynamicHtml + existingContent;
+        }
+
+        // フォームが送信されたときの処理
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+
+            const { error } = await supabaseClient
+                .from('posts')
+                .insert([{ name, title, content }]);
+
+            if (error) {
+                alert('投稿に失敗しました: ' + error.message);
+            } else {
+                alert('投稿が完了しました！');
+                form.reset();
+                fetchPosts(); // 記事一覧を再読み込みして最新を表示
+            }
+        });
+
+        // セキュリティ用の簡易エスケープ関数
+        function escapeHtml(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+        }
+
+        // ページを開いたときに記事を読み込む
+        fetchPosts();
+    </script>
 </body>
 </html>
