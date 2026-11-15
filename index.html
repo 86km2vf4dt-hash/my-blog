@@ -28,11 +28,19 @@
       padding: 40px 20px;
       text-align: center;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.8rem;
-      letter-spacing: 0.05em;
-    }
+    article {
+    max-width: 720px;
+    margin: 40px auto;
+    /* 付箋っぽい明るいイエロー（またはお好みの色）にする */
+    background-color: #fff8d6; 
+    padding: 30px;
+    /* 角を少しだけ丸くする */
+    border-radius: 4px;
+    /* 付箋が少し浮いているようなリアルな影をつける */
+    box-shadow: 2px 4px 10px rgba(0,0,0,0.15);
+    /* お好みで少しだけ傾けて「ラフに貼った感」を出す場合（外してもOK） */
+    /* transform: rotate(-1deg); */
+}
     header p {
       color: #777;
       font-size: 0.9rem;
@@ -42,12 +50,7 @@
       max-width: 720px;
       margin: 40px auto;
       padding: 0 20px;
-    }
-    article {
-      background: #fff;
-      padding: 32px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    
       margin-bottom: 32px;
     }
     .date {
