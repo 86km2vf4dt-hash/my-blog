@@ -10,15 +10,26 @@
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-            /* 本物のCorkboard02.jpgを背景に設定 */
             background-image: url('images/CorkBoard02.jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
             color: #333;
         }
-        h1 { margin-bottom: 5px; text-align: center; color: #3d2612; text-shadow: 1px 1px 2px rgba(255,255,255,0.8); }
-        .subtitle { text-align: center; font-size: 14px; color: #4a3321; margin-bottom: 25px; font-weight: bold; text-shadow: 1px 1px 2px rgba(255,255,255,0.8); }
+        h1 {
+            margin-bottom: 5px;
+            text-align: center;
+            color: #3d2612;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: #4a3321;
+            margin-bottom: 25px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+        }
         .post-form {
             background: #fffdf9;
             padding: 20px;
@@ -58,7 +69,9 @@
             font-weight: bold;
             width: 100%;
         }
-        .post-form button:hover { background-color: #3d2b1f; }
+        .post-form button:hover {
+            background-color: #3d2b1f;
+        }
         .article-card {
             background: #fffdf0;
             padding: 20px;
@@ -88,7 +101,10 @@
             background: rgba(255, 235, 150, 0.9);
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
-        .date { font-size: 12px; color: #666; }
+        .date {
+            font-size: 12px;
+            color: #666;
+        }
         .post-image {
             max-width: 100%;
             height: auto;
@@ -115,9 +131,18 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
             transition: background 0.2s, transform 0.1s;
         }
-        .like-btn:hover { background: #e64a19; transform: scale(1.05); }
-        .like-btn:active { transform: scale(0.95); }
-        .like-count { font-size: 14px; font-weight: bold; color: #d32f2f; }
+        .like-btn:hover {
+            background: #e64a19;
+            transform: scale(1.05);
+        }
+        .like-btn:active {
+            transform: scale(0.95);
+        }
+        .like-count {
+            font-size: 14px;
+            font-weight: bold;
+            color: #d32f2f;
+        }
     </style>
 </head>
 <body>
@@ -152,8 +177,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SUPABASE_URL = 'https://sagrjbgmyghmswnavcip.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhZ3JqYmdteWdobXN3bmF2Y2lwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2OTcwNTF9.Wn3fS6M3y7q5M7N7q5M7N7q5M7N7q5M7N7q5M7N7q5M';
-        
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhZ3JqJbgmyghmswnavcipIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2OTcwNTF9.Wn3fS6M3y7q5M7N7q5M7N7q5M7N7q5M7N7q5M7N7q5M';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         const form = document.getElementById('postForm');
@@ -181,7 +205,7 @@
                 const dateStr = new Date(post.created_at).toLocaleDateString();
                 const imageUrlHtml = post.image_url ? `<img src="${post.image_url}" class="post-image" alt="投稿画像">` : '';
                 const likesCount = post.likes || 0;
-
+                
                 html += `
                     <div class="article-card">
                         <div class="date">${dateStr} &nbsp; <b>投稿者:</b> ${escapeHtml(post.author)}</div>
@@ -214,12 +238,10 @@
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const author = document.getElementById('author').value;
             const title = document.getElementById('title').value;
             const content = document.getElementById('content').value;
             const imageFile = document.getElementById('imageFile').files[0];
-
             let imageUrl = null;
 
             if (imageFile) {
@@ -236,7 +258,6 @@
                 const { data: publicUrlData } = supabase.storage
                     .from('post-images')
                     .getPublicUrl(fileName);
-                
                 imageUrl = publicUrlData.publicUrl;
             }
 
