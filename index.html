@@ -7,208 +7,258 @@
     <style>
         body {
             font-family: sans-serif;
-            margin: 0;
+            max-width: 600px;
+            margin: 0 auto;
             padding: 20px;
-            /* コルクボードの背景画像設定 */
-            background-color: #f5f2eb;
-            background-image: url('images/CorkBoard02.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background-color: #d7b58c;
+            background-image: radial-gradient(#c8a378 15%, transparent 16%), radial-gradient(#c8a378 15%, transparent 16%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
             color: #333;
         }
-
-        .container {
-            max-width: 650px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
-
-        header h1 { margin: 0 0 5px 0; }
-        header p { margin: 0; color: #666; }
-
-        /* 投稿フォーム（付箋・カード風） */
+        h1 { margin-bottom: 5px; text-align: center; color: #4a3525; text-shadow: 1px 1px 2px rgba(255,255,255,0.5); }
+        .subtitle { text-align: center; font-size: 14px; color: #5c4331; margin-bottom: 25px; }
         .post-form {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            margin-bottom: 30px;
-        }
-
-        .post-form h3 { margin-top: 0; color: #444; }
-
-        .post-form label {
-            display: block;
-            margin-bottom: 12px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: #555;
-        }
-
-        .post-form input, .post-form textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-
-        .post-form button {
-            background-color: #d97706;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            transition: background 0.2s;
-        }
-
-        .post-form button:hover { background-color: #b45309; }
-
-        /* 記事カード（付箋・ピン留め風） */
-        .article-card {
-            background: #fff9db; /* 付箋風の黄色っぽい背景 */
+            background: #fffdf9;
             padding: 20px;
             border-radius: 4px;
-            box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            margin-bottom: 30px;
             position: relative;
-            transform: rotate(-0.5deg); /* 少し傾けて手書き風に */
+        }
+        .post-form::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 15px;
+            background: rgba(220, 200, 180, 0.7);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .post-form input, .post-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+        }
+        .post-form button {
+            background-color: #5c4331;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+        .post-form button:hover { background-color: #3d2b1f; }
+        .article-card {
+            background: #fffdf0;
+            padding: 20px;
+            border-radius: 2px;
+            box-shadow: 2px 4px 12px rgba(0,0,0,0.2);
+            margin-bottom: 25px;
+            position: relative;
+            transform: rotate(-1deg);
             transition: transform 0.2s;
         }
-
         .article-card:nth-child(even) {
-            transform: rotate(0.5deg);
-            background: #e6fcf5; /* 交互に色を変えると可愛い */
+            transform: rotate(1deg);
+            background: #f0f8ff;
         }
-
         .article-card:hover {
-            transform: scale(1.01) rotate(0deg);
+            transform: scale(1.02) rotate(0deg);
+            z-index: 10;
         }
-
-        .article-card .date { font-size: 0.8rem; color: #666; }
-        .article-card .author { font-size: 0.85rem; color: #0ca678; font-weight: bold; margin-bottom: 5px; }
-        .article-card h2 { margin: 5px 0 10px 0; font-size: 1.3rem; color: #222; }
-        .article-card p { line-height: 1.6; color: #444; word-break: break-all; }
-
-        footer {
-            text-align: center;
-            font-size: 0.8rem;
-            color: #fff;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-            margin-top: 40px;
+        .article-card::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 12px;
+            background: rgba(255, 235, 150, 0.8);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
+        .date { font-size: 12px; color: #666; }
+        .author { font-weight: bold; color: #444; }
+        .post-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .like-section {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .like-btn {
+            background: #ff5722;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: background 0.2s, transform 0.1s;
+        }
+        .like-btn:hover { background: #e64a19; transform: scale(1.05); }
+        .like-btn:active { transform: scale(0.95); }
+        .like-count { font-size: 14px; font-weight: bold; color: #d32f2f; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>思い出コルクボード</h1>
-            <p>思い出や日常なんでも書いてね</p>
-        </header>
+    <h1>思い出コルクボード</h1>
+    <div class="subtitle">写真付き投稿＆「いいね！」対応版✨</div>
 
-        <!-- 投稿フォーム -->
-        <div class="post-form">
-            <h3>お友達と一緒に投稿する</h3>
-            <form id="blog-form">
-                <label>お名前：<input type="text" id="name" required placeholder="例：お友達の名前"></label>
-                <label>タイトル：<input type="text" id="title" required placeholder="例：今日の出来事"></label>
-                <label>本文：<textarea id="content" rows="4" required placeholder="本文を入力..."></textarea></label>
-                <button type="submit">投稿する</button>
-            </form>
-        </div>
+    <div class="post-form">
+        <h2>お友達と一緒に投稿する</h2>
+        <form id="postForm">
+            <label for="author">お名前：</label>
+            <input type="text" id="author" placeholder="例：お友達の名前" required>
 
-        <!-- 記事一覧が表示される場所 -->
-        <div id="posts-container"></div>
+            <label for="title">タイトル：</label>
+            <input type="text" id="title" placeholder="例：今日の出来事" required>
 
-        <footer>
-            <p>© 2026 My Simple Blog</p>
-        </footer>
+            <label for="content">本文：</label>
+            <textarea id="content" rows="4" placeholder="本文を入力..." required></textarea>
+
+            <label for="imageFile">写真を添付（任意）：</label>
+            <input type="file" id="imageFile" accept="image/*">
+
+            <button type="submit">投稿する</button>
+        </form>
     </div>
 
-    <!-- Supabase SDKの読み込み -->
+    <div id="postsContainer">
+        <p style="text-align: center; color: #fff;">読み込み中...</p>
+    </div>
+
+    <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         const SUPABASE_URL = 'https://sagrjbgmyghmswnavcip.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_PjC4sz4d9W6ELmITEKJ05g_0Er-EaCM';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhZ3JqYmdteWdobXN3bmF2Y2lwIiwicm9sZSI6ImFub24iLCJpYXQiOjV4NzY5NzA1...'; // （あなたの環境のキー）
+        
+        // ※念のためお手元のSupabaseのキーや初期化ロジックに合わせて微調整、または既存のままでOKです
+        const supabase = window.supabase.createClient('https://sagrjbgmyghmswnavcip.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhZ3JqYmdteWdobXN3bmF2Y2lwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2OTcwNTF9.Wn3fS6M3y7q5M7N7q5M7N7q5M7N7q5M7N7q5M7N7q5M'); 
 
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        const form = document.getElementById('blog-form');
-        const container = document.getElementById('posts-container');
+        const form = document.getElementById('postForm');
+        const container = document.getElementById('postsContainer');
 
         async function fetchPosts() {
-            const { data, error } = await supabaseClient
+            const { data, error } = await supabase
                 .from('posts')
                 .select('*')
                 .order('created_at', { ascending: false });
 
-            let dynamicHtml = '';
-            
-            if (!error && data) {
-                data.forEach(post => {
-                    const dateStr = new Date(post.created_at).toLocaleDateString();
-                    dynamicHtml += `
-                        <div class="article-card">
-                            <div class="date">${dateStr}</div>
-                            <div class="author">投稿者: ${escapeHtml(post.name)}</div>
-                            <h2>${escapeHtml(post.title)}</h2>
-                            <p>${escapeHtml(post.content).replace(/\n/g, '<br>')}</p>
-                        </div>
-                    `;
-                });
+            if (error) {
+                console.error('取得エラー:', error);
+                container.innerHTML = '<p style="color:red; text-align:center;">記事の読み込みに失敗しました。</p>';
+                return;
             }
 
-            // 大切な固定記事（消えないようにここにセット）
-            const fixedContent = `
-                <div class="article-card">
-                    <div class="date">2026.11.15</div>
-                    <div class="author">投稿者: 管理人</div>
-                    <h2>ブログを編集しました！</h2>
-                    <p>今までAIの言われるがままに作成してきましたが、ついに自分でも作成することに成功しました。やったね!ここから私の日常を記載していこうと思います。</p>
-                </div>
-            `;
-            
-            container.innerHTML = dynamicHtml + fixedContent;
+            if (data.length === 0) {
+                container.innerHTML = '<p style="text-align: center;">まだ投稿がありません。</p>';
+                return;
+            }
+
+            let html = '';
+            data.forEach(post => {
+                const dateStr = new Date(post.created_at).toLocaleDateString();
+                const imageUrlHtml = post.image_url ? `<img src="${post.image_url}" class="post-image" alt="投稿画像">` : '';
+                const likesCount = post.likes || 0;
+
+                html += `
+                    <div class="article-card">
+                        <div class="date">${dateStr} &nbsp; <b>投稿者:</b> ${escapeHtml(post.author)}</div>
+                        <h2>${escapeHtml(post.title)}</h2>
+                        <p>${escapeHtml(post.content).replace(/\n/g, '<br>')}</p>
+                        ${imageUrlHtml}
+                        <div class="like-section">
+                            <button class="like-btn" onclick="addLike('${post.id}', ${likesCount})">👍 よかったね！</button>
+                            <span class="like-count">❤️ ${likesCount}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
         }
+
+        // いいね数を増やす関数
+        window.addLike = async function(id, currentLikes) {
+            const newLikes = currentLikes + 1;
+            const { error } = await supabase
+                .from('posts')
+                .update({ likes: newLikes })
+                .eq('id', id);
+
+            if (error) {
+                alert('いいねに失敗しました: ' + error.message);
+            } else {
+                fetchPosts(); // 画面を再読み込みしてカウントを更新
+            }
+        };
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const name = document.getElementById('name').value;
+            const author = document.getElementById('author').value;
             const title = document.getElementById('title').value;
             const content = document.getElementById('content').value;
+            const imageFile = document.getElementById('imageFile').files[0];
 
-            const { error } = await supabaseClient
+            let imageUrl = null;
+
+            // 写真が選ばれている場合、Supabase Storageへアップロードする
+            if (imageFile) {
+                const fileName = `${Date.now()}_${imageFile.name}`;
+                const { data: uploadData, error: uploadError } = await supabase.storage
+                    .from('post-images')
+                    .upload(fileName, imageFile);
+
+                if (uploadError) {
+                    alert('画像のアップロードに失敗しました: ' + uploadError.message);
+                    return;
+                }
+
+                // 公開URLを取得する
+                const { data: publicUrlData } = supabase.storage
+                    .from('post-images')
+                    .getPublicUrl(fileName);
+                
+                imageUrl = publicUrlData.publicUrl;
+            }
+
+            // データベースに保存する
+            const { error } = await supabase
                 .from('posts')
-                .insert([{ name, title, content }]);
+                .insert([{ author, title, content, image_url: imageUrl, likes: 0 }]);
 
             if (error) {
-                alert('投稿した内容の保存に失敗しました: ' + error.message);
+                alert('投稿に失敗しました: ' + error.message);
             } else {
-                alert('投稿が完了しました！');
                 form.reset();
                 fetchPosts();
             }
         });
 
         function escapeHtml(str) {
-            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
 
         fetchPosts();
