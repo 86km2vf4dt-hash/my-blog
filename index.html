@@ -110,10 +110,8 @@
 
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        const SUPABASE_URL = 'https://sagrjbgmyghmswnavcip.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhZ3JqJbgmyghmswnavcipIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2OTcwNTF9.Wn3fS6M3y7q5M7N7q5M7N7q5M7N7q5M7N7q5M7N7q5M';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabase = window.supabase.createClient('https://sagrjbgmyghmswnavcip.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhZ3JqJbgmyghmswnavcipIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2OTcwNTF9.Wn3fS6M3y7q5M7N7q5M7N7q5M7N7q5M7N7q5M7N7q5M7N7q5M');
+    
 
         const form = document.getElementById('postForm');
         const container = document.getElementById('postsContainer');
@@ -122,7 +120,7 @@
             const { data, error } = await supabase
                 .from('posts')
                 .select('*')
-                .order('created_at', { ascending: false });
+                .order('created_at', { ascending: false });z
 
             if (error) {
                 container.innerHTML = '<p style="color:red; text-align:center;">記事の読み込みに失敗しました: ' + error.message + '</p>';
