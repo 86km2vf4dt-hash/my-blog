@@ -1,217 +1,440 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NG Log - コルクボード風ブログ</title>
+    <title>NG Log - 思い出コルクボード</title>
+
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: sans-serif;
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-            background: #f4f4f4;
+            background: #f4eee5;
             color: #333;
         }
+
         h1 {
             text-align: center;
             color: #3d2612;
         }
-        .post-form {
+
+        .post-form,
+        .article-card {
             background: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             margin-bottom: 25px;
         }
-        .post-form input, .post-form textarea {
+
+        .post-form input,
+        .post-form textarea {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             margin-top: 5px;
             margin-bottom: 15px;
-            box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 4px;
+            font-size: 16px;
         }
+
+        .post-form textarea {
+            resize: vertical;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
         .post-form button {
-            background-color: #5c4331;
+            background: #5c4331;
             color: white;
-            padding: 10px 20px;
+            padding: 12px;
             border: none;
             border-radius: 4px;
-            cursor: pointer;
             font-weight: bold;
             width: 100%;
         }
-        .article-card {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
+
+        .article-card {
+            border-left: 5px solid #a77b50;
+        }
+
         .date {
             font-size: 12px;
             color: #666;
         }
+
         .post-image {
+            display: block;
             max-width: 100%;
-            height: auto;
+            max-height: 400px;
+            object-fit: contain;
             border-radius: 4px;
-            margin-top: 10px;
-            margin-bottom: 10px;
+            margin: 15px auto;
         }
+
+        .post-content {
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+            line-height: 1.7;
+        }
+
         .like-section {
             margin-top: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
+
         .like-btn {
             background: #ff5722;
             color: white;
             border: none;
-            padding: 5px 12px;
+            padding: 8px 14px;
             border-radius: 20px;
-            cursor: pointer;
             font-weight: bold;
         }
+
         .like-count {
             font-weight: bold;
             color: #d32f2f;
         }
+
+        .message {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .error {
+            color: red;
+        }
     </style>
 </head>
+
 <body>
-    <h1>思い出コルクボード</h1>
+
+    <h1>📌 思い出コルクボード</h1>
 
     <div class="post-form">
         <h2>新しい思い出を投稿する</h2>
+
         <form id="postForm">
+
             <label for="author">お名前：</label>
-            <input type="text" id="author" placeholder="例：春斗" required>
+            <input
+                type="text"
+                id="author"
+                placeholder="例：春斗"
+                maxlength="50"
+                required
+            >
 
             <label for="title">タイトル：</label>
-            <input type="text" id="title" placeholder="例：今日の出来事" required>
+            <input
+                type="text"
+                id="title"
+                placeholder="例：今日の出来事"
+                maxlength="100"
+                required
+            >
 
             <label for="content">本文：</label>
-            <textarea id="content" rows="4" placeholder="本文を入力..." required></textarea>
+            <textarea
+                id="content"
+                rows="4"
+                maxlength="5000"
+                placeholder="本文を入力..."
+                required
+            ></textarea>
 
             <label for="imageFile">写真を添付（任意）：</label>
-            <input type="file" id="imageFile" accept="image/*">
+            <input
+                type="file"
+                id="imageFile"
+                accept="image/jpeg,image/png,image/gif,image/webp"
+            >
 
-            <button type="submit">投稿する</button>
+            <button type="submit" id="submitBtn">
+                投稿する
+            </button>
+
         </form>
     </div>
 
     <div id="postsContainer">
-        <p style="text-align: center;">読み込み中...</p>
+        <p class="message">読み込み中...</p>
     </div>
 
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    const supabase = window.supabase.createClient('https://sagrjbgmyghmswnavcip.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhZ3JqJbgmyghmswnavcipIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2OTcwNTF9.Wn3fS6M3y7q5M7N7q5M7N7q5M7N7q5M7N7q5M7N7q5M7N7q5M');
-    
+
+    <script>
+        // Supabase設定
+        const SUPABASE_URL =
+            'https://sagrjbgmyghmswnavcip.supabase.co';
+
+        const SUPABASE_KEY =
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhZ3JqJbgmyghmswnavcipIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2OTcwNTF9.Wn3fS6M3y7q5M7N7q5M7N7q5M7N7q5M7N7q5M7N7q5M7N7q5M');
+
+        const supabase = window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
 
         const form = document.getElementById('postForm');
         const container = document.getElementById('postsContainer');
+        const submitBtn = document.getElementById('submitBtn');
 
+        // HTMLエスケープ
+        function escapeHtml(str) {
+            return String(str ?? '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            })[char]);
+        }
+
+        // 投稿一覧取得
         async function fetchPosts() {
+            container.innerHTML =
+                '<p class="message">読み込み中...</p>';
+
             const { data, error } = await supabase
                 .from('posts')
                 .select('*')
-                .order('created_at', { ascending: false });z
+                .order('created_at', { ascending: false });
 
             if (error) {
-                container.innerHTML = '<p style="color:red; text-align:center;">記事の読み込みに失敗しました: ' + error.message + '</p>';
+                container.innerHTML =
+                    '<p class="message error">記事の読み込みに失敗しました: ' +
+                    escapeHtml(error.message) + '</p>';
                 return;
             }
 
-            if (data.length === 0) {
-                container.innerHTML = '<p style="text-align: center;">まだ投稿がありません。</p>';
+            if (!data || data.length === 0) {
+                container.innerHTML =
+                    '<p class="message">まだ投稿がありません。</p>';
                 return;
             }
 
-            let html = '';
-            data.forEach(post => {
-                const dateStr = new Date(post.created_at).toLocaleDateString();
-                const imageUrlHtml = post.image_url ? `<img src="${post.image_url}" class="post-image" alt="投稿画像">` : '';
-                const likesCount = post.likes || 0;
+            container.innerHTML = data.map(post => {
+                const dateStr = post.created_at
+                    ? new Date(post.created_at).toLocaleString('ja-JP')
+                    : '';
 
-                html += `
+                const imageHtml = post.image_url
+                    ? `<img src="${escapeHtml(post.image_url)}"
+                        class="post-image"
+                        alt="投稿画像"
+                        loading="lazy">`
+                    : '';
+
+                const likesCount = Math.max(
+                    0,
+                    Number(post.likes) || 0
+                );
+
+                return `
                     <div class="article-card">
-                        <div class="date">${dateStr} &nbsp; <b>投稿者:</b> ${escapeHtml(post.author)}</div>
-                        <h2>${escapeHtml(post.title)}</h2>
-                        <p>${escapeHtml(post.content).replace(/\n/g, '<br>')}</p>
-                        ${imageUrlHtml}
-                        <div class="like-section">
-                            <button class="like-btn" onclick="addLike('${post.id}', ${likesCount})">👍 よかったね！</button>
-                            <span class="like-count">❤️ ${likesCount}</span>
+
+                        <div class="date">
+                            ${escapeHtml(dateStr)}
+                            &nbsp;
+                            <b>投稿者:</b>
+                            ${escapeHtml(post.author)}
                         </div>
+
+                        <h2>${escapeHtml(post.title)}</h2>
+
+                        <p class="post-content">${escapeHtml(post.content)}</p>
+
+                        ${imageHtml}
+
+                        <div class="like-section">
+
+                            <button
+                                class="like-btn"
+                                data-id="${escapeHtml(post.id)}"
+                            >
+                                👍 よかったね！
+                            </button>
+
+                            <span class="like-count">
+                                ❤️ ${likesCount}
+                            </span>
+
+                        </div>
+
                     </div>
                 `;
-            });
-            container.innerHTML = html;
+            }).join('');
+
         }
 
-        window.addLike = async function(id, currentLikes) {
-            const newLikes = currentLikes + 1;
-            const { error } = await supabase
-                .from('posts')
-                .update({ likes: newLikes })
-                .eq('id', id);
+        // いいね処理
+        async function addLike(id, button) {
 
-            if (error) {
+            button.disabled = true;
+
+            try {
+                // 最新のいいね数を取得
+                const { data: post, error: fetchError } =
+                    await supabase
+                        .from('posts')
+                        .select('likes')
+                        .eq('id', id)
+                        .single();
+
+                if (fetchError) throw fetchError;
+
+                const newLikes = (Number(post.likes) || 0) + 1;
+
+                const { error } = await supabase
+                    .from('posts')
+                    .update({ likes: newLikes })
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                await fetchPosts();
+
+            } catch (error) {
                 alert('いいねに失敗しました: ' + error.message);
-            } else {
-                fetchPosts();
+                button.disabled = false;
             }
-        };
+        }
 
+        // いいねボタンのイベント
+        container.addEventListener('click', async (e) => {
+            const button = e.target.closest('.like-btn');
+
+            if (!button || button.disabled) return;
+
+            await addLike(button.dataset.id, button);
+        });
+
+        // 投稿処理
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const author = document.getElementById('author').value;
-            const title = document.getElementById('title').value;
-            const content = document.getElementById('content').value;
-            const imageFile = document.getElementById('imageFile').files[0];
+            if (submitBtn.disabled) return;
 
-            let imageUrl = null;
-            if (imageFile) {
-                const fileName = `${Date.now()}_${imageFile.name}`;
-                const { data: uploadData, error: uploadError } = await supabase.storage
-                    .from('post-images')
-                    .upload(fileName, imageFile);
+            submitBtn.disabled = true;
+            submitBtn.textContent = '投稿中...';
 
-                if (uploadError) {
-                    alert('画像のアップロードに失敗しました: ' + uploadError.message);
-                    return;
+            try {
+
+                const author =
+                    document.getElementById('author').value.trim();
+
+                const title =
+                    document.getElementById('title').value.trim();
+
+                const content =
+                    document.getElementById('content').value.trim();
+
+                const imageFile =
+                    document.getElementById('imageFile').files[0];
+
+                if (!author || !title || !content) {
+                    throw new Error('すべての必須項目を入力してください。');
                 }
 
-                const { data: publicUrlData } = supabase.storage
-                    .from('post-images')
-                    .getPublicUrl(fileName);
-                imageUrl = publicUrlData.publicUrl;
-            }
+                let imageUrl = null;
 
-            const { error } = await supabase
-                .from('posts')
-                .insert([{ author, title, content, image_url: imageUrl, likes: 0 }]);
+                // 画像アップロード
+                if (imageFile) {
 
-            if (error) {
-                alert('投稿に失敗しました: ' + error.message);
-            } else {
+                    const allowedTypes = [
+                        'image/jpeg',
+                        'image/png',
+                        'image/gif',
+                        'image/webp'
+                    ];
+
+                    if (!allowedTypes.includes(imageFile.type)) {
+                        throw new Error('対応していない画像形式です。');
+                    }
+
+                    if (imageFile.size > 5 * 1024 * 1024) {
+                        throw new Error('画像サイズは5MB以下にしてください。');
+                    }
+
+                    const extension = imageFile.name
+                        .split('.')
+                        .pop()
+                        .toLowerCase();
+
+                    const fileName =
+                        `${crypto.randomUUID()}.${extension}`;
+
+                    const { error: uploadError } =
+                        await supabase.storage
+                            .from('post-images')
+                            .upload(fileName, imageFile, {
+                                contentType: imageFile.type
+                            });
+
+                    if (uploadError) throw uploadError;
+
+                    const { data: publicUrlData } =
+                        supabase.storage
+                            .from('post-images')
+                            .getPublicUrl(fileName);
+
+                    imageUrl = publicUrlData.publicUrl;
+                }
+
+                // データベースに投稿
+                const { error } = await supabase
+                    .from('posts')
+                    .insert([{
+                        author,
+                        title,
+                        content,
+                        image_url: imageUrl,
+                        likes: 0
+                    }]);
+
+                if (error) throw error;
+
                 form.reset();
-                fetchPosts();
+
+                alert('投稿が完了しました！');
+
+                await fetchPosts();
+
+            } catch (error) {
+
+                alert('投稿に失敗しました: ' + error.message);
+
+            } finally {
+
+                submitBtn.disabled = false;
+                submitBtn.textContent = '投稿する';
+
             }
         });
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        }
-
+        // 初回読み込み
         fetchPosts();
+
     </script>
+
 </body>
 </html>
